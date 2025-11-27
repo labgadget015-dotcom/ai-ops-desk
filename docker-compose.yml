@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-ops-desk-db
+    environment:
+      POSTGRES_DB: ai_ops_desk
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-ops-network
+
+  # AI Ops Desk Orchestrator
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-ops-desk-orchestrator
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_ops_desk
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEFAULT_TIMEZONE: ${DEFAULT_TIMEZONE:-Europe/London}
+      WORKING_HOURS_START: ${WORKING_HOURS_START:-9}
+      WORKING_HOURS_END: ${WORKING_HOURS_END:-17}
+      AUTO_SEND_ENABLED: ${AUTO_SEND_ENABLED:-false}
+      ESCALATION_THRESHOLD: ${ESCALATION_THRESHOLD:-0.7}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ai-ops-network
+    command: uvicorn orchestrator:app --host 0.0.0.0 --port 8000 --reload
+
+  # Optional: Redis for caching (uncomment to enable)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: ai-ops-desk-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - ai-ops-network
+
+  # Optional: Adminer for database management
+  adminer:
+    image: adminer:latest
+    container_name: ai-ops-desk-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - ai-ops-network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  # redis_data:
+  #   driver: local
+
+networks:
+  ai-ops-network:
+    driver: bridge
+
+# Quick Start:
+# 1. Copy .env.example to .env and fill in your credentials
+# 2. Run: docker-compose up -d
+# 3. Access API at http://localhost:8000
+# 4. Access API docs at http://localhost:8000/docs
+# 5. Access Adminer (DB UI) at http://localhost:8080
+#
+# Development mode (with live reload):
+# docker-compose up
+#
+# Production mode:
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# View logs:
+# docker-compose logs -f orchestrator
+#
+# Stop all services:
+# docker-compose down
