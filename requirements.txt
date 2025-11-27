@@ -1,0 +1,33 @@
+# AI Ops Desk Dependencies
+
+# Web Framework
+fastapi==0.109.0
+uvicorn==0.27.0
+pydantic==2.5.3
+
+# Database
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+alembic==1.13.1
+
+# Google API Clients
+google-api-python-client==2.115.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0
+
+# LLM/AI
+openai==1.10.0
+anthropicsdk==0.8.1
+langchain==0.1.4
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-mock==3.12.0
+httpx==0.26.0
+
+# Utilities
+python-dotenv==1.0.0
+pydantic-settings==2.1.0
+tenacity==8.2.3
+structlog==24.1.0
