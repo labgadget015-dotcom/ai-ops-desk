@@ -1,0 +1,23 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+
+[MESSAGES CONTROL]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    too-many-instance-attributes,
+    import-error,
+    trailing-whitespace,
+    wrong-import-order
+
+[BASIC]
+good-names=i,j,k,ex,Run,_,app,db
+
+[FORMAT]
+max-line-length=120
+
+[DESIGN]
+max-attributes=15
+min-public-methods=0
