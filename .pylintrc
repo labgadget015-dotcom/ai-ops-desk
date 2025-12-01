@@ -16,7 +16,10 @@ disable=
     fixme,
     redefined-outer-name,
     import-outside-toplevel,
-    raise-missing-from
+    raise-missing-from,
+    broad-exception-caught,
+    too-many-arguments,
+    too-many-positional-arguments
 
 [BASIC]
 good-names=i,j,k,ex,Run,_,app,db
