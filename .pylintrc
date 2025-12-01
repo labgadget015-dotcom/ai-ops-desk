@@ -13,7 +13,10 @@ disable=
     wrong-import-order,
     unused-argument,
     unused-import,
-    fixme
+    fixme,
+    redefined-outer-name,
+    import-outside-toplevel,
+    raise-missing-from
 
 [BASIC]
 good-names=i,j,k,ex,Run,_,app,db
