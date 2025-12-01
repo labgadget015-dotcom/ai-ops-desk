@@ -17,7 +17,8 @@ google-auth-oauthlib==1.2.0
 
 # LLM/AI
 openai==1.10.0
-anthropic==0.8.1langchain==0.1.4
+anthropic==0.8.1
+langchain==0.1.4
 
 # Testing
 pytest==7.4.4
