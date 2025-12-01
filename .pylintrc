@@ -10,7 +10,10 @@ disable=
     too-many-instance-attributes,
     import-error,
     trailing-whitespace,
-    wrong-import-order
+    wrong-import-order,
+    unused-argument,
+    unused-import,
+    fixme
 
 [BASIC]
 good-names=i,j,k,ex,Run,_,app,db
